@@ -1,0 +1,67 @@
+directive @relation (
+    name: String
+    direction: String
+) on FIELD_DEFINITION
+
+interface Reference {
+    id: ID!
+    shortReference: String!
+}
+type Author {
+    id: ID!
+    firstInitial: String!
+    firstName: String
+    surname: String!
+    references:[LiteratureReference!]! @relation(name: "AUTHORED_BY", direction: "IN")
+}
+
+type Journal  {
+    id: ID!
+    name: String!
+    references:[LiteratureReference!]! @relation(name: "PUBLISHED_IN", direction: "IN")
+}
+
+type LiteratureReference implements Reference {
+    id: ID!
+    shortReference: String!
+    authors : [Author!]!  @relation(name: "AUTHORED_BY", direction: "OUT")
+    title: String!
+    journal: Journal!  @relation(name: "PUBLISHED_IN", direction: "OUT")
+    volume: String!
+    firstPage: String!
+    lastPage: String!
+    publicationYear: String!
+    DOI: String
+    PMID: String
+    abstract:  String
+}
+
+type ClinicalTrial  {
+    id: ID!
+    name: String!
+    resource: String!
+    resourceId: String!
+    acronym: String
+    briefTitle: String
+    officialTitle: String!
+    references: [Reference!]! @relation(name: "REFERENCE_FOR", direction: "IN")
+}
+
+
+type MeetingAbstractReference implements Reference {
+    id: ID!
+    shortReference: String!
+    title: String!
+    abstract: String
+    meetingName: String!
+    meetingDate: String!
+    authors : [Author!]!  @relation(name: "AUTHORED_BY", direction: "OUT")
+}
+
+type InternetReference implements Reference{
+    id: ID!
+    shortReference: String!
+    webAddress: String!
+    accessedDate: String!
+}
+
