@@ -240,6 +240,7 @@ def replace_characters(a_string: str):
         a_string = a_string.replace('Ⅱ','II')
         a_string = a_string.replace('Ⅰ','I')
         a_string = a_string.replace('&', '')
+        a_string = a_string.replace(':', '')
     return a_string
 
 
@@ -266,3 +267,6 @@ def yesterday_as_string():
     date_time = yesterday.strftime("%m-%d-%Y")
     return date_time
 
+
+def get_unique_id(tag):
+    return tag + datetime.now().strftime("%Y%m%d%H%M%S%f")

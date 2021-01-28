@@ -10,7 +10,6 @@ interface Reference {
 type Author {
     id: ID!
     firstInitial: String!
-    firstName: String
     surname: String!
     references:[LiteratureReference!]! @relation(name: "AUTHORED_BY", direction: "IN")
 }
@@ -64,4 +63,70 @@ type InternetReference implements Reference{
     webAddress: String!
     accessedDate: String!
 }
+#Organization ID (IPF)	Organization Name	Organization City	Organization State	Organization Type	Organization Zip	Organization Country
+type FundedOrganization{
+    id: ID!
+    organizationID: String!
+    name: String!
+    type: String!
+    city:   String!
+    state: String!
+    country: String!
+    grants: [NIHGrant]! @relation(name: "ORGANIZATION", direction: "IN")
+}
 
+type NIHInstituteOrCenter {
+    id: ID!
+    name: String!
+    grantsFunded: [NIHGrant] @relation(name: "FUNDED", direction: "IN")
+    grantsAdministered:[NIHGrant] @relation(name: "ADMIN", direction: "IN")
+}
+
+type PrincipalInvestigator {
+    id: ID!
+    firstName: String!
+    middleName: String
+    surname: String!
+    personID: String!
+    grants:[NIHGrant]! @relation(name: "PI", direction: "IN")
+}
+
+type NIHGrant {
+    id: ID!
+    lower_case_search_string: String!
+    projectTitle: String!
+    projectTerms: String!
+    nihSpendingCategorization: String!
+    publicHealthRelevance: String!
+    applicationID: String!
+    awardNoticeDate: String!
+    FOA: String!
+    projectNumber: String!
+    type: String!
+    activity: String!
+    IC: String!
+    serialNumber: String!
+    supportYear: String!
+    programOfficialInformation: String!
+    projectStartDate: String!
+    projectEndDate: String!
+    studySection: String!
+    otherPIorProjectLeaders: String!
+    department: String!
+    budgetStartDate: String!
+    budgetEndDate: String!
+    CFDACode: String!
+    fundingMechanism: String!
+    fiscalYear: String!
+    totalCost: Int!
+    totalCost_SubProjects: Int!
+    directCost_IC: Int!
+    inDirectCost_IC: Int!
+    totalCost_IC: Int!
+    NIHCOVID19Response:String!
+    abstract: String
+    organization: FundedOrganization! @relation(name: "ORGANIZATION", direction: "OUT")
+    administeringIC: NIHInstituteOrCenter! @relation(name: "ADMIN", direction: "OUT")
+    fundingIC: NIHInstituteOrCenter! @relation(name: "FUNDED", direction: "OUT")
+    contactPIorProjectLeader: PrincipalInvestigator! @relation(name: "PI", direction: "OUT")
+}
