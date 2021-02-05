@@ -130,6 +130,7 @@ def replace_characters(a_string: str):
         a_string = a_string.replace(u"\u0190", 'e')
         a_string = a_string.replace(u"\u223c", '~')
         a_string = a_string.replace(u"\u301c", '~')
+        a_string = a_string.replace(u"\u2029", '')
 
 
         a_string = a_string.replace("á", "a")
@@ -241,6 +242,9 @@ def replace_characters(a_string: str):
         a_string = a_string.replace('Ⅰ','I')
         a_string = a_string.replace('&', '')
         a_string = a_string.replace(':', '')
+        a_string = a_string.replace('+', '_')
+        a_string = a_string.replace('‐','_')
+
     return a_string
 
 

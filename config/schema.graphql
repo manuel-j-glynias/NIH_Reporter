@@ -3,10 +3,7 @@ directive @relation (
     direction: String
 ) on FIELD_DEFINITION
 
-interface Reference {
-    id: ID!
-    shortReference: String!
-}
+
 type Author {
     id: ID!
     firstInitial: String!
@@ -20,7 +17,7 @@ type Journal  {
     references:[LiteratureReference!]! @relation(name: "PUBLISHED_IN", direction: "IN")
 }
 
-type LiteratureReference implements Reference {
+type LiteratureReference  {
     id: ID!
     shortReference: String!
     authors : [Author!]!  @relation(name: "AUTHORED_BY", direction: "OUT")
@@ -33,37 +30,10 @@ type LiteratureReference implements Reference {
     DOI: String
     PMID: String
     abstract:  String
-}
-
-type ClinicalTrial  {
-    id: ID!
-    name: String!
-    resource: String!
-    resourceId: String!
-    acronym: String
-    briefTitle: String
-    officialTitle: String!
-    references: [Reference!]! @relation(name: "REFERENCE_FOR", direction: "IN")
+    coreProjects: [CoreProject]! @relation(name: "PUB", direction: "IN")
 }
 
 
-type MeetingAbstractReference implements Reference {
-    id: ID!
-    shortReference: String!
-    title: String!
-    abstract: String
-    meetingName: String!
-    meetingDate: String!
-    authors : [Author!]!  @relation(name: "AUTHORED_BY", direction: "OUT")
-}
-
-type InternetReference implements Reference{
-    id: ID!
-    shortReference: String!
-    webAddress: String!
-    accessedDate: String!
-}
-#Organization ID (IPF)	Organization Name	Organization City	Organization State	Organization Type	Organization Zip	Organization Country
 type FundedOrganization{
     id: ID!
     organizationID: String!
@@ -89,6 +59,13 @@ type PrincipalInvestigator {
     surname: String!
     personID: String!
     grants:[NIHGrant]! @relation(name: "PI", direction: "IN")
+}
+type CoreProject{
+    id: ID!
+    coreProjectNumber: String!
+    grants: [NIHGrant]! @relation(name: "CORE", direction: "IN")
+    publications: [LiteratureReference] @relation(name: "PUB", direction: "OUT")
+    clinical_trials: [ClinicalTrial]! @relation(name: "CORE_CT", direction: "OUT")
 }
 
 type NIHGrant {
@@ -129,4 +106,22 @@ type NIHGrant {
     administeringIC: NIHInstituteOrCenter! @relation(name: "ADMIN", direction: "OUT")
     fundingIC: NIHInstituteOrCenter! @relation(name: "FUNDED", direction: "OUT")
     contactPIorProjectLeader: PrincipalInvestigator! @relation(name: "PI", direction: "OUT")
+    coreProject: CoreProject! @relation(name: "CORE", direction: "OUT")
+}
+
+type ClinicalTrial {
+    id: ID!
+    nct_id:String!
+    brief_title:String!
+    official_title:String!
+    study_type: String!
+    phases: [String]!
+    status: String!
+    status_date: String!
+    brief_summary: String!
+    detailed_description: String!
+    conditions: [String]!
+    drugs: [String]!
+    coreProject: CoreProject! @relation(name: "CORE_CT", direction: "IN")
+
 }
