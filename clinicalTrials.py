@@ -1,3 +1,4 @@
+import requests
 from pytrials.client import ClinicalTrials
 
 from util import replace_characters
@@ -23,7 +24,7 @@ def get_trial_info(nct_id):
         interventions_array = study['ProtocolSection']['ArmsInterventionsModule']['InterventionList']['Intervention']
         drugs = []
         for intervention in interventions_array:
-            if intervention['InterventionType'] == 'Drug':
+            if intervention['InterventionType'] == 'Drug' or intervention['InterventionType'] == 'Biological':
                 drugs.append(intervention['InterventionName'])
 
     status = study['ProtocolSection']['StatusModule']['OverallStatus']
@@ -50,6 +51,26 @@ def get_trial_info(nct_id):
     }
     return ct_obj
 
+# https://clinicaltrialsapi.cancer.gov/v1/clinical-trials?size=500&include=nct_id&sites.org_postal_code=60612
+
+def retreive_trials():
+    server = "https://clinicaltrialsapi.cancer.gov/v1/clinical-trials?size=500&include=nct_id&sites.org_postal_code=60612"
+    # print(server_ext)
+    r = requests.get(server, headers={"Content-Type": "application/json"})
+    decoded = None
+    if r.ok:
+        decoded = r.json()
+    trials = []
+    for trial_dict in decoded['trials']:
+        nct = trial_dict['nct_id']
+        trials.append(nct)
+    return trials
+
 # 'FullStudiesResponse'
 if __name__ == '__main__':
-    get_trial_info('NCT03271372')
+    # trials = retreive_trials()
+    # print(trials)
+    # for nct in trials:
+    #     info = get_trial_info(nct)
+    #     print(info)
+    get_trial_info('NCT03233711')

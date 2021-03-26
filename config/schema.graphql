@@ -3,9 +3,21 @@ directive @relation (
     direction: String
 ) on FIELD_DEFINITION
 
+type User {
+    id: ID!
+    lower_case_search_string: String!
+    firstInitial: String!
+    surname: String!
+    author: Author
+    pi: PrincipalInvestigator
+    user_name: String!
+    email: String!
+    password: String!
+}
 
 type Author {
     id: ID!
+    lower_case_search_string: String!
     firstInitial: String!
     surname: String!
     references:[LiteratureReference!]! @relation(name: "AUTHORED_BY", direction: "IN")
@@ -13,12 +25,14 @@ type Author {
 
 type Journal  {
     id: ID!
+    lower_case_search_string: String!
     name: String!
     references:[LiteratureReference!]! @relation(name: "PUBLISHED_IN", direction: "IN")
 }
 
 type LiteratureReference  {
     id: ID!
+    lower_case_search_string: String!
     shortReference: String!
     authors : [Author!]!  @relation(name: "AUTHORED_BY", direction: "OUT")
     title: String!
@@ -36,6 +50,7 @@ type LiteratureReference  {
 
 type FundedOrganization{
     id: ID!
+    lower_case_search_string: String!
     organizationID: String!
     name: String!
     type: String!
@@ -47,6 +62,7 @@ type FundedOrganization{
 
 type NIHInstituteOrCenter {
     id: ID!
+    lower_case_search_string: String!
     name: String!
     grantsFunded: [NIHGrant] @relation(name: "FUNDED", direction: "IN")
     grantsAdministered:[NIHGrant] @relation(name: "ADMIN", direction: "IN")
@@ -54,6 +70,7 @@ type NIHInstituteOrCenter {
 
 type PrincipalInvestigator {
     id: ID!
+    lower_case_search_string: String!
     firstName: String!
     middleName: String
     surname: String!
@@ -62,6 +79,7 @@ type PrincipalInvestigator {
 }
 type CoreProject{
     id: ID!
+    lower_case_search_string: String!
     coreProjectNumber: String!
     grants: [NIHGrant]! @relation(name: "CORE", direction: "IN")
     publications: [LiteratureReference] @relation(name: "PUB", direction: "OUT")
@@ -111,17 +129,21 @@ type NIHGrant {
 
 type ClinicalTrial {
     id: ID!
+    lower_case_search_string: String!
     nct_id:String!
     brief_title:String!
     official_title:String!
     study_type: String!
     phases: [String]!
+    phase_lower_case_search_string: String!
     status: String!
     status_date: String!
     brief_summary: String!
     detailed_description: String!
     conditions: [String]!
+    condition_lower_case_search_string: String!
     drugs: [String]!
-    coreProject: CoreProject! @relation(name: "CORE_CT", direction: "IN")
+    drug_lower_case_search_string: String!
+    coreProject: CoreProject @relation(name: "CORE_CT", direction: "IN")
 
 }

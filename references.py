@@ -10,7 +10,7 @@ from metapub import PubMedFetcher
 import re
 import unicodedata as ud
 
-cache = '/Users/mglynias/Documents/GitHub/OmniSeqKnowledgebase_populate/cache'
+cache = '/Users/mglynias/PycharmProjects/NIH_Reporter/cache'
 
 
 def rmdiacritics(char):
@@ -114,17 +114,24 @@ def ref_name_from_authors_pmid_and_year(authors, pmid, year):
 
 def create_reference_mutation(ref_id, ref):
     ref_name = ref_name_from_authors_pmid_and_year(ref['authors'], ref['pmid'], ref['year'])
-    s = f'''{ref_id}: createLiteratureReference(id: \\"{ref_id}\\", abstract: \\"{ref['abstract']}\\", shortReference: \\"{ref_name}\\", title: \\"{ref['title']}\\", volume: \\"{ref['volume']}\\", firstPage: \\"{ref['first_page']}\\", lastPage: \\"{ref['last_page']}\\", publicationYear: \\"{ref['year']}\\", DOI: \\"{ref['doi']}\\", PMID: \\"{ref['pmid']}\\"),'''
+
+    if ref['pmid']=='24954076':
+        ref['abstract'] = ''
+        print('removed abstract')
+    lc = ref['title'] + ' ' + ref['title']+ ' ' + ref['journal']
+    lc = lc.lower()
+    s = f'''{ref_id}: createLiteratureReference(id: \\"{ref_id}\\", abstract: \\"{ref['abstract']}\\", shortReference: \\"{ref_name}\\", title: \\"{ref['title']}\\", volume: \\"{ref['volume']}\\", firstPage: \\"{ref['first_page']}\\", lastPage: \\"{ref['last_page']}\\", publicationYear: \\"{ref['year']}\\", DOI: \\"{ref['doi']}\\", PMID: \\"{ref['pmid']}\\", lower_case_search_string: \\"{lc}\\"),'''
     return s
 
 
 def create_author_mutation(id,surname,first):
-    s = f'''{id}: createAuthor(firstInitial: \\"{first}\\" , id: \\"{id}\\",surname: \\"{surname}\\"),'''
+    lc = first.lower()+ ' ' + surname.lower()
+    s = f'''{id}: createAuthor(firstInitial: \\"{first}\\" , id: \\"{id}\\",surname: \\"{surname}\\", lower_case_search_string: \\"{lc}\\"),'''
     return s
 
 
 def create_journal_mutation(journal, journal_id):
-    s = f'''{journal_id}: createJournal(id: \\"{journal_id}\\",name: \\"{journal}\\"),'''
+    s = f'''{journal_id}: createJournal(id: \\"{journal_id}\\",name: \\"{journal}\\", lower_case_search_string: \\"{journal.lower()}\\"),'''
     return s
 
 

@@ -49,25 +49,25 @@ def send_mutation(mutation_payload:str, server:str) -> str:
         if not response.ok:
             response.raise_for_status()
             print(mutation_payload)
-            sys.exit()
+            # sys.exit()
         responseBody: str = response.json()
         # print(responseBody)
         if 'errors' in responseBody:
             print(mutation_payload)
             print(responseBody)
-            sys.exit()
+            # sys.exit()
     except requests.exceptions.RequestException as err:
         print('error in request')
         print(err)
         print(mutation_payload)
         print(response.text)
-        sys.exit()
+        # sys.exit()
     except UnicodeEncodeError as err:
         print('UnicodeEncodeError')
         print(err)
         print(mutation_payload)
         print(responseBody)
-        sys.exit()
+        # sys.exit()
     # print(responseBody)
     return responseBody
 
@@ -170,9 +170,11 @@ def replace_characters(a_string: str):
         a_string = a_string.replace("õ", "o")
         a_string = a_string.replace("ö", "o")
         a_string = a_string.replace("ó", "o")
+        a_string = a_string.replace("ό", "o")
         a_string = a_string.replace("ò", "o")
         a_string = a_string.replace("ô", "o")
         a_string = a_string.replace("ø", "o")
+
 
         a_string = a_string.replace("ř", "r")
 
@@ -235,7 +237,8 @@ def replace_characters(a_string: str):
         a_string = a_string.replace(u"\u2248", ' =')
         a_string = a_string.replace('\t',' ')
         a_string = a_string.replace('\r','')
-        a_string = a_string.replace('\n','')
+        a_string = a_string.replace('\n',' ')
+        a_string = a_string.replace('#',' ')
         a_string = a_string.replace('⁸⁸','')
         a_string = a_string.replace('⁹⁰','')
         a_string = a_string.replace('Ⅱ','II')
@@ -244,6 +247,8 @@ def replace_characters(a_string: str):
         a_string = a_string.replace(':', '')
         a_string = a_string.replace('+', '_')
         a_string = a_string.replace('‐','_')
+        a_string = a_string.replace('_x000D_','')
+        a_string = a_string.replace('~','about ')
 
     return a_string
 
